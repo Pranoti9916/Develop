@@ -1,0 +1,34 @@
+* Create a account in github  
+* Create a repo in github  
+
+* clone that repo in your system  -   git clone https://github.com/Pranoti9916/Development.git
+
+* Create a new ("dev") branch in the same repo -    git branch dev
+
+
+* Commit a file and push it to "dev" branch in your repo -   
+
+ 		1. git add book.txt
+ 		2. git commit -m  “first commit”
+		3. git push origin dev
+
+
+
+* Create a new branch "release" in the same repo    -  git branch release
+
+
+* Cherrypick the file from dev branch to "release" branch.  -  git cherry-pick 4ccc04954
+
+
+* Checkout to "dev" branch.  -   git checkout dev
+
+
+* Push 2-3 files to "dev" branch. -  
+
+         	1. git add .
+ 		2. git commit -m  “multiple file commit”
+		3. git push origin dev
+
+
+
+* Merge all the "dev" branch changes to the "release" branch (without cherry-picking each commit)   - git merge dev 
