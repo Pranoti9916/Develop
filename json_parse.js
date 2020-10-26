@@ -63,7 +63,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
  }
 
- function allPost()
+ function allPost()                                                   //Find quantites for all the products                      
  {
      let allProducts={}
      let arr=[1746,3433,4098,5723,9872]
@@ -75,7 +75,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
     console.log(allProducts)
  }
 
- function findByProductId()
+ function findByProductId().                                        //Find quantites for particular product
  {
      const readline = require('readline').createInterface({
          input: process.stdin,
