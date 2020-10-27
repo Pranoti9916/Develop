@@ -62,7 +62,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
  }
 
- function getAllProductId()
+ function getAllProductId()                                         //Get all product Id
  {
      let arr=[]
      let i=0;
@@ -78,7 +78,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
  }
 
 
- function allPost()
+ function allPost()                                                  //Find quantites for each prodId
  {
      let allProducts={}
      let outputArray = Array.from(new Set(getAllProductId()))
@@ -92,7 +92,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
  }
 
 
- function findByProductId()
+ function findByProductId()                                      //Find quantity for particular prodId
  {
      const readline = require('readline').createInterface({
          input: process.stdin,
