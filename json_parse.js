@@ -32,7 +32,6 @@
  ]
 
 const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
- let arr=[1746,3433,4098,5723,9872]
 
  function findProductQuantity(productId)
  {
@@ -63,11 +62,28 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
  }
 
- function allPost()                                                   //Find quantites for all the products                      
+ function getAllProductId()
+ {
+     let arr=[]
+     let i=0;
+
+     json_input.forEach((input)=>{
+         input.orderLines.forEach((inputObj)=>{
+             arr[i++]=inputObj.productId
+         })
+     })
+     return arr
+
+
+ }
+
+
+ function allPost()
  {
      let allProducts={}
-     let arr=[1746,3433,4098,5723,9872]
-     arr.forEach((id)=>{
+     let outputArray = Array.from(new Set(getAllProductId()))
+
+     outputArray.forEach((id)=>{
          let productQuantity=findProductQuantity(id)
          allProducts[id.toString()]=productQuantity
 
@@ -75,7 +91,8 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
     console.log(allProducts)
  }
 
- function findByProductId().                                        //Find quantites for particular product
+
+ function findByProductId()
  {
      const readline = require('readline').createInterface({
          input: process.stdin,
@@ -86,7 +103,7 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
  }
 
- console.log(`Output of function 2:\n\n`)
+ console.log(`Output of function 2:\n`)
  allPost()
 console.log(`\n\nOutput of function 1:`)
  findByProductId()
