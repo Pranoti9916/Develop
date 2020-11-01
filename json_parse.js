@@ -62,30 +62,19 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
  }
 
- function getAllProductId()                                         //Get all product Id
- {
-     let arr=[]
-     let i=0;
-
-     json_input.forEach((input)=>{
-         input.orderLines.forEach((inputObj)=>{
-             arr[i++]=inputObj.productId
-         })
-     })
-     return arr
-
-
- }
 
 
  function allPost()                                                  //Find quantites for each prodId
  {
      let allProducts={}
-     let outputArray = Array.from(new Set(getAllProductId()))
+     json_input.forEach(input=>{
+         input.orderLines.forEach(product=>{
+             if(!allProducts.hasOwnProperty(product.productId))
+             {
+                 allProducts[product.productId]= findProductQuantity(product.productId)
+             }
 
-     outputArray.forEach((id)=>{
-         let productQuantity=findProductQuantity(id)
-         allProducts[id.toString()]=productQuantity
+         })
 
      })
     console.log(allProducts)
