@@ -33,16 +33,16 @@
 
 const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
 
- function findProductQuantity(productId)
- {
-     let productQuantity={"MONDAY" : 0,
+ function findProductQuantity(productId,productQuantity={
+         "MONDAY" : 0,
          "TUESDAY" : 0,
          "WEDNESDAY" : 0,
          "THURSDAY" : 0,
          "FRIDAY " : 0,
          "SATURDAY" : 0,
-         "SUNDAY" : 0
-     }
+         "SUNDAY" : 0})
+ {
+     
       json_input.forEach(input => {
         let d = new Date(input.creationDate);
         let day=weekday[d.getDay()]
@@ -69,8 +69,16 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
          input.orderLines.forEach(product=>{
              if(!allProducts.hasOwnProperty(product.productId))
              {
-                 allProducts[product.productId]= findProductQuantity(product.productId)
+                 allProducts[product.productId]= findProductQuantity(product.productId,productQuantity={
+                   "SUNDAY" : 0,
+                   "MONDAY" : 0,
+                   "TUESDAY" : 0,
+                   "WEDNESDAY" : 0,
+                   "THURSDAY" : 0,
+                   "FRIDAY " : 0,
+                   "SATURDAY" : 0})
              }
+            
 
          })
 
