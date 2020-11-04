@@ -31,29 +31,31 @@
      }
  ]
 
-const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+function findDay(date)
+{
+    const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SATURDAY"];
+    let d = new Date(date);
+    return weekday[d.getDay()]
+}
 
  function findProductQuantity(productId,productQuantity={
-         "MONDAY" : 0,
-         "TUESDAY" : 0,
-         "WEDNESDAY" : 0,
-         "THURSDAY" : 0,
-         "FRIDAY " : 0,
-         "SATURDAY" : 0,
-         "SUNDAY" : 0})
+     "MONDAY" : 0,
+     "TUESDAY" : 0,
+     "WEDNESDAY" : 0,
+     "THURSDAY" : 0,
+     "FRIDAY " : 0,
+     "SATURDAY" : 0,
+     "SUNDAY" : 0
+ })
  {
-     
       json_input.forEach(input => {
-        let d = new Date(input.creationDate);
-        let day=weekday[d.getDay()]
-
-        let store =input.orderLines.find(arrayInput=>arrayInput.productId===productId)
+          let day=findDay(input.creationDate)
+          let store =input.orderLines.find(arrayInput=>arrayInput.productId===productId)
 
         if(store!=undefined)
         {
             productQuantity[day]= store.quantity + productQuantity[day]
         }
-
     })
      return productQuantity
 
@@ -61,32 +63,46 @@ const weekday = ["SUNDAY","MONDAY","TUESDAY","WEDNESDAY","THURSDAY","FRIDAY","SA
 
 
 
- function allPost()                                                  //Find quantites for each prodId
+function allPost()                              //Get quantities for all productIds
  {
-     let allProducts={}
-     
+     let quantity={"SUNDAY" : 0,
+         "MONDAY" : 0,
+     "TUESDAY" : 0,
+     "WEDNESDAY" : 0,
+     "THURSDAY" : 0,
+     "FRIDAY " : 0,
+     "SATURDAY" : 0
+     }
+
+     let allProduct={}
      json_input.forEach(input=>{
-         input.orderLines.forEach(product=>{
-             if(!allProducts.hasOwnProperty(product.productId))
+        let day=findDay(input.creationDate)
+         input.orderLines.forEach(arrayInput=>{
+             if(allProduct.hasOwnProperty(arrayInput.productId))
              {
-                 allProducts[product.productId]= findProductQuantity(product.productId,productQuantity={
-                   "SUNDAY" : 0,
-                   "MONDAY" : 0,
-                   "TUESDAY" : 0,
-                   "WEDNESDAY" : 0,
-                   "THURSDAY" : 0,
-                   "FRIDAY " : 0,
-                   "SATURDAY" : 0})
+                 let quantityObj=allProduct[arrayInput.productId]
+                 quantityObj[day]= quantityObj[day]+arrayInput.quantity
              }
-            
+             else{
+                 allProduct[arrayInput.productId]=quantity;
+                 let quantityObj=allProduct[arrayInput.productId]
+                 quantityObj[day]=arrayInput.quantity;
+             }
+             quantity={ "SUNDAY" : 0,
+                 "MONDAY" : 0,
+                 "TUESDAY" : 0,
+                 "WEDNESDAY" : 0,
+                 "THURSDAY" : 0,
+                 "FRIDAY " : 0,
+                 "SATURDAY" : 0
+                }
 
          })
 
      })
-    console.log(allProducts)
+    console.log(allProduct)
+
  }
-
-
 
 
  function findByProductId()                                      //Find quantity for particular prodId
