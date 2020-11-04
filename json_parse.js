@@ -62,47 +62,33 @@ function findDay(date)
  }
 
 
-
+function generatreEmptyObject(){
+     return {
+        "SUNDAY" : 0,
+        "MONDAY" : 0,
+        "TUESDAY" : 0,
+        "WEDNESDAY" : 0,
+        "THURSDAY" : 0,
+        "FRIDAY" : 0,
+        "SATURDAY" : 0
+     };
+ }
 function allPost()                              //Get quantities for all productIds
  {
-     let quantity={"SUNDAY" : 0,
-         "MONDAY" : 0,
-     "TUESDAY" : 0,
-     "WEDNESDAY" : 0,
-     "THURSDAY" : 0,
-     "FRIDAY " : 0,
-     "SATURDAY" : 0
-     }
-
      let allProduct={}
      json_input.forEach(input=>{
         let day=findDay(input.creationDate)
          input.orderLines.forEach(arrayInput=>{
-             if(allProduct.hasOwnProperty(arrayInput.productId))
-             {
-                 let quantityObj=allProduct[arrayInput.productId]
-                 quantityObj[day]= quantityObj[day]+arrayInput.quantity
+            const id = arrayInput.productId;
+             if(!allProduct.hasOwnProperty(id)){
+                allProduct[id]= generatreEmptyObject();
              }
-             else{
-                 allProduct[arrayInput.productId]=quantity;
-                 let quantityObj=allProduct[arrayInput.productId]
-                 quantityObj[day]=arrayInput.quantity;
-             }
-             quantity={ "SUNDAY" : 0,
-                 "MONDAY" : 0,
-                 "TUESDAY" : 0,
-                 "WEDNESDAY" : 0,
-                 "THURSDAY" : 0,
-                 "FRIDAY " : 0,
-                 "SATURDAY" : 0
-                }
-
+             allProduct[id][day] =  allProduct[id][day] + arrayInput.quantity;
          })
-
      })
     console.log(allProduct)
-
  }
+
 
 
  function findByProductId()                                      //Find quantity for particular prodId
