@@ -7,10 +7,22 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeScreen from '../Screens/HomeScreen';
 import AllTaskScreen from '../Screens/AllTaskScreen';
 import CategoryDetailScreen from '../Screens/CategoryDetailView';
+import AddTaskScreen from '../Screens/AddTaskScreen';
+import LogInPage from '../Components/LoginPage';
+import SignUpPage from '../Screens/SignUpScreen';
 
 const homeTab = createBottomTabNavigator();
 const Stack = createStackNavigator();
-
+function LoginP() {
+  return (
+    <Stack.Navigator
+      initialRouteName="Login"
+      screenOptions={{headerShown: false}}>
+      <Stack.Screen name="Login" component={LogInPage} />
+      <Stack.Screen name="SignUp" component={SignUpPage} />
+    </Stack.Navigator>
+  );
+}
 function HomeTabs() {
   return (
     <homeTab.Navigator
@@ -27,41 +39,37 @@ function HomeTabs() {
 
 function MyTabs() {
   return (
+    <Stack.Navigator>
+      {/*<Stack.Screen name="Login" component={LogInPage} />*/}
+      <Stack.Screen
+        options={{headerShown: false}}
+        name="Home"
+        component={HomeTabs}
+      />
+      <Stack.Screen
+        name="My Tasks"
+        component={CategoryDetailScreen}
+        options={({route}) => ({headerBackTitle: route.params.categoryName})}
+      />
+      <Stack.Screen name="Add Task" component={AddTaskScreen} />
+    </Stack.Navigator>
+  );
+}
+
+function Nav() {
+  return (
     <NavigationContainer>
-      <Stack.Navigator>
+      <Stack.Navigator screenOptions={{headerShown: false}}>
         <Stack.Screen
           options={{headerShown: false}}
-          name="Home"
-          component={HomeTabs}
+          name="Login"
+          component={LoginP}
         />
-        <Stack.Screen
-          name="Task"
-          component={CategoryDetailScreen}
-          options={({route}) => ({headerBackTitle: route.params.name})}
-        />
+        <Stack.Screen name="MyTabs" component={MyTabs} />
       </Stack.Navigator>
     </NavigationContainer>
   );
 }
-
-//
-// function MyTabs() {
-//   return (
-//     <NavigationContainer>
-//       <homeTab.Navigator
-//         initialRouteName="Home"
-//         tabBarOptions={{
-//           labelStyle: style.labelStyle,
-//           tabStyle: {
-//             height: 58,
-//           },
-//         }}>
-//         <homeTab.Screen name="Home" component={HomeScreen} />
-//         <homeTab.Screen name="AllTasks" component={AllTaskScreen} />
-//       </homeTab.Navigator>
-//     </NavigationContainer>
-//   );
-// }
 
 const styles = StyleSheet.create({
   labelStyle: {
@@ -78,4 +86,4 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
 });
-export default MyTabs;
+export default Nav;

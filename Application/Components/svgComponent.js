@@ -16,13 +16,12 @@ function SvgComponent(props) {
   // );
 
   return (
-    <SafeAreaView>
+
       <SvgUri
         width="76"
         height="70"
         uri="https://assets.v7-io.invisionapp.com/assets/A_MGFjZjlkZDY2YjhlM2JmOfoBaNbRIdM--ifYJcm5BjajG8H9wTEOtkIqAopUZ4Rbn5SPyi8Y16Duey84IvFK3ruXV9tHR5v1PKxbzRMbL7npa9HtxSotnq2tyrUIlhRR?filename=tasks.svg"
       />
-    </SafeAreaView>
   );
 }
 

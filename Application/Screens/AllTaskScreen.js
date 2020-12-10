@@ -1,33 +1,88 @@
-// import React from 'react';
-// import {View, Text, StyleSheet} from 'react-native';
-// import {SafeAreaView} from 'react-native-safe-area-context';
-// import SvgComponent from '../Components/svgComponent';
-// import Clock from '/Users/ppatil/Desktop/nativePro/assets/tasks.svg';
-// import SvgUri from 'react-native-svg-uri';
-//
-// const AllTaskScreen = () => {
-//   return (
-//     <SafeAreaView >
-//         <SvgUri width='70' height='40' uri={require('/Users/ppatil/Desktop/nativePro/assets/bg.png')}/>
-//
-//     </SafeAreaView>
-//   );
+import React, {useState, useEffect} from 'react';
+import {List, ListItem} from 'native-base';
+import {SafeAreaView, StyleSheet, Text} from 'react-native';
+
+import {useDispatch, useSelector} from 'react-redux';
+import CustomCard from '../Components/Card';
+import * as taskActions from '../store/actions/tasksActions';
+// const getData = async () => {
+//   let token = '';
+//   try {
+//     token = await AsyncStorage.getItem('accessToken');
+//     return token;
+//   } catch (error) {
+//     console.error(error);
+//   }
 // };
-//
-// const style = StyleSheet.create({
-//   screen: {
-//     flex: 1,
-//   },
-// });
-//
-// export default AllTaskScreen;
+const AllTaskScreen = ({navigation}) => {
+  // console.log("all tasks")
+  // const [token, setToken] = useState('');
+  // const [data, setData] = useState([]);
+  // getData()
+  //   .then((token) => setToken(token))
+  //   .catch((error) => console.error(error));
+  // console.log(token)
 
-import * as React from 'react';
-import {SvgUri} from 'react-native-svg';
-import {SafeAreaView} from 'react-native-safe-area-context';
-import SvgComponent from '../Components/svgComponent';
+  // useEffect(() => {
+  //   console.log("ji"+i++)
+  //   fetch('https://tudu-node.herokuapp.com/tasks', {
+  //     headers: {
+  //       // Accept: 'application/json',
+  //       Authorization: 'Bearer  ' + token,
+  //       'Content-Type': 'application/json',
+  //     },
+  //   })
+  //     .then((response) => {
+  //        console.log(response)
+  //       return response.json();
+  //     })
+  //     .then((responseJson) => {
+  //       console.log(responseJson)
+  //       setData(responseJson);
+  //       // console.log(token1)
+  //       // setToken1(responseJson)
+  //       // console.log(token1)
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // }, []);
+  const products = useSelector((state) => state.taskReduce.availableTasks);
+  const dispatch = useDispatch();
 
-export default () => (
-   <SvgComponent/>
+  useEffect(() => {
+    dispatch(taskActions.fetchTasks());
+  }, [dispatch]);
 
-);
+  return (
+    <SafeAreaView style={styles.screen}>
+      <List>
+        <ListItem itemDivider>
+          <Text>Today</Text>
+        </ListItem>
+        <ListItem>
+          <Text>Tomorrow</Text>
+        </ListItem>
+        <ListItem>
+          <Text>Later</Text>
+        </ListItem>
+      </List>
+      {products.map((r) => (
+        <CustomCard d={r} key={r.id} navigation={navigation} />
+      ))}
+      {/*<CustomCard navigation={navigation}/>*/}
+    </SafeAreaView>
+  );
+};
+
+const styles = StyleSheet.create({
+  screen: {
+    // flex: 1,
+  },
+  cardStyle: {
+    height: 94,
+    // flexDirection:'row',
+  },
+});
+
+export default AllTaskScreen;

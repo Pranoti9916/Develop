@@ -1,44 +1,66 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, SafeAreaView} from 'react-native';
 import moment from 'moment';
-import {TextInput} from 'react-native-paper';
 import SvgComponent from '../Components/svgComponent';
 import CButton from '../Components/HomeScreenbutton';
+import AsyncStorage from '@react-native-community/async-storage';
+
+const getData = async () => {
+  let userEmail = '';
+  try {
+    userEmail = await AsyncStorage.getItem('username');
+    return userEmail;
+  } catch (error) {
+    console.error(error);
+  }
+};
 
 const HomeScreen = ({navigation}) => {
+
   // var date = moment().utcOffset('+05:30').format('YYYY-MMMM-Do ');
-  var date = moment().format('dddd, MMMM Do ');
+  let date = moment().format('dddd, MMMM Do ');
+  const [userName, setUserName] = useState('');
+  getData()
+    .then((r) => setUserName(r.substring(0, r.indexOf('@'))))
+    .catch((error) => console.log(error));
+
   return (
     <SafeAreaView>
       <View style={styles.screen}>
-        <Text style={styles.dateStyle}>{date}</Text>
-        <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        <Text style={styles.dateStyle}>{!!date}</Text>
+        <View style={{flexDirection: 'row'}}>
           <View style={{marginRight: 40}}>
-            <Text style={styles.hiUser}>Hi , Sally</Text>
+            <Text style={styles.hiUser}>Hi , userName</Text>
             <Text style={styles.makeTheDay}>
               Let's make this day productive
             </Text>
           </View>
           <SvgComponent />
         </View>
-        {/*<View style={{flexDirection: 'row',justifyContent: 'space-between',flexWrap: "wrap"}}>*/}
-        {/*  <View>*/}
-        {/*    <Text style={styles.hiUser}>hii</Text>*/}
-        {/*    <Text style={styles.makeTheDay}>hiii there</Text>*/}
-        {/*  </View>*/}
 
-        {/*  <SvgComponent/>*/}
-        {/*  /!*<Text>okkkk</Text>*!/*/}
-        {/*</View>*/}
-        <View style={styles.rectangle}>
-          <Text />
-        </View>
+        <View style={styles.rectangle}></View>
         <Text style={styles.dailyProgress}>Daily Progress</Text>
         <View style={styles.parentButton}>
-          <CButton style={{backgroundColor: '#74ACF1'}} text={'Work'} navigation={navigation}/>
-          <CButton style={{backgroundColor: '#86DFDF'}} text={'Personal'} navigation={navigation}/>
-          <CButton style={{backgroundColor: '#96CFA1'}} text={'Health'} navigation={navigation}/>
-          <CButton style={{backgroundColor: '#B3B3FF'}} text={'Social'} navigation={navigation} />
+          <CButton
+            style={{backgroundColor: '#74ACF1'}}
+            text={'Work'}
+            navigation={navigation}
+          />
+          <CButton
+            style={{backgroundColor: '#86DFDF'}}
+            text={'Personal'}
+            navigation={navigation}
+          />
+          <CButton
+            style={{backgroundColor: '#96CFA1'}}
+            text={'Health'}
+            navigation={navigation}
+          />
+          <CButton
+            style={{backgroundColor: '#B3B3FF'}}
+            text={'Social'}
+            navigation={navigation}
+          />
         </View>
       </View>
     </SafeAreaView>
@@ -87,7 +109,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     borderRadius: 8,
-    marginTop:20,
+    marginTop: 30,
   },
   dailyProgress: {
     height: 21,

@@ -2,9 +2,12 @@ import React from 'react';
 import {TouchableOpacity, Text, StyleSheet, Platform} from 'react-native';
 
 const CatButton = (props) => {
+  const setCategoryName = () => {
+        props.onSetName(props.text)
+    }
     return (
-        <TouchableOpacity style={{...styles.button, ...props.style}}>
-            <Text style={styles.text}>{props.text}</Text>
+        <TouchableOpacity style={{...styles.button, ...props.style}} onPress={setCategoryName}>
+            <Text style={styles.text}>{!!props.text}</Text>
         </TouchableOpacity>
     );
 };

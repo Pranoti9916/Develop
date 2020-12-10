@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {
   View,
   StyleSheet,
@@ -10,57 +10,15 @@ import {
   Dimensions,
   KeyboardAvoidingView,
   SafeAreaView,
+  Alert,
+  Linking,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 
-const storeData = async (accessToken, userEmail) => {
-  try {
-    await AsyncStorage.setItem('accessToken', accessToken);
-    await AsyncStorage.setItem('username', userEmail);
-  } catch (error) {
-    // Error saving data
-  }
-};
-const LogInPage = ({navigation}) => {
+const SignUpPage = ({navigation}) => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  useEffect(() => {
-    const tryLogin = async () => {
-      const userToken = await AsyncStorage.getItem('accessToken');
-      const userName = await AsyncStorage.getItem('username');
-
-      if (!userToken) {
-        navigation.navigate('Login');
-        return;
-      }
-      // const transformedData = JSON.parse(userData);
-      // const { token, userId, expiryDate } = transformedData;
-      // const expirationDate = new Date(expiryDate);
-      //
-      // if (expirationDate <= new Date() || !token || !userId) {
-      //   props.navigation.navigate('Auth');
-      //   return;
-      // }
-      else {
-        console.log('hii');
-        navigation.navigate('MyTabs');
-      }
-
-      // dispatch(authActions.authenticate(userId, token));
-    };
-
-    tryLogin();
-  });
-  function loginTask() {
-    console.log(userEmail);
-    console.log(userPassword);
-    if (!userEmail) {
-      alert('username must be longer than or equal to 4 characters');
-    }
-    if (!userPassword) {
-      alert('password must be longer than or equal to 6 characters');
-    }
-    return fetch('https://tudu-node.herokuapp.com/auth/signin', {
+  function secd() {
+    return fetch('https://tudu-node.herokuapp.com/auth/signup', {
       method: 'POST',
       headers: {
         // Accept: 'application/json',
@@ -72,19 +30,30 @@ const LogInPage = ({navigation}) => {
       }),
     })
       .then((response) => {
-        // console.log(response)
-        return response.json();
+        if (response.status != 201) {
+          return response.json();
+        } else {
+          return {statusCode: 201};
+        }
       })
       .then((responseJson) => {
-        // console.log(responseJson)
-        if (responseJson.statusCode == 404) {
+        if (responseJson.statusCode == 201) {
+          Alert.alert('Successfully Registered', 'Go to Login Page', [
+            {text: 'OK', onPress: () => navigation.navigate('Login')},
+          ]);
+        } else if (responseJson.statusCode == 409) {
+          Alert.alert(responseJson.message, 'Go to Login Page', [
+            {
+              text: 'Cancel',
+              onPress: () => console.log('Cancel Pressed'),
+              style: 'cancel',
+            },
+            {text: 'OK', onPress: () => navigation.navigate('Login')},
+          ]);
+        } else if (!userEmail) {
           alert(responseJson.message);
-        } else if (responseJson.accessToken) {
-          storeData(responseJson.accessToken, userEmail);
-
-          navigation.replace('MyTabs');
         } else {
-          alert('Please check your email id or password');
+          alert(responseJson.message);
         }
       })
       .catch((error) => {
@@ -115,20 +84,18 @@ const LogInPage = ({navigation}) => {
             onChangeText={(UserPassword) => setUserPassword(UserPassword)}
           />
 
-          <TouchableOpacity style={styles.loginButton} onPress={loginTask}>
-            <Text style={styles.buttonText}>Login</Text>
+          <TouchableOpacity style={styles.SignUpButton} onPress={secd}>
+            <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
-          <Text style={styles.signupOption}>Don't have account?</Text>
           <Text
-            style={{...styles.signupOption, ...styles.signUpLink}}
-            onPress={() => navigation.navigate('SignUp')}>
-            Sign Up
+            style={styles.signupOption}
+            onPress={() => {
+              Linking.openURL(
+                'https://docs.worldsecuresystems.com/user-manual/site-settings/admin-users/admin-users-login-issues',
+              );
+            }}>
+            Trouble signin up?
           </Text>
-          {/*</Text>*/}
-
-          {/*<Text onPress={() => Linking.openURL('https://google.com')}>*/}
-          {/*  Click Here To Open Google.*/}
-          {/*</Text>*/}
         </View>
       </ImageBackground>
     </SafeAreaView>
@@ -179,7 +146,7 @@ const styles = StyleSheet.create({
       },
     }),
   },
-  loginButton: {
+  SignUpButton: {
     width: 173,
     borderRadius: 30,
     height: 63,
@@ -199,15 +166,11 @@ const styles = StyleSheet.create({
     lineHeight: 25,
   },
   signupOption: {
-    //height: 22,
-    // width: 305,
+    color: '#4A90E2',
     fontFamily: 'Microsoft Sans Serif',
     margin: 24,
     fontSize: 20,
     textAlign: 'center',
-  },
-  signUpLink: {
-    color: '#4A90E2',
   },
   bgImage: {
     width: Math.round(Dimensions.get('window').width),
@@ -215,4 +178,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LogInPage;
+export default SignUpPage;

@@ -1,23 +1,77 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   TextInput,
-  SafeAreaView,
 } from 'react-native';
 
 import CatButton from '../Components/CategorySelect';
+import AsyncStorage from '@react-native-community/async-storage';
+const getData = async () => {
+  let token = '';
+  try {
+    token = await AsyncStorage.getItem('accessToken');
+    return token;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const sendToStore = (task, category, date, time, token) => {
+  return fetch('https://tudu-node.herokuapp.com/tasks', {
+    method: 'POST',
+    headers: {
+      Authorization: 'Bearer' + '  ' + token,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      title: task,
+      category,
+    }),
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((responseJson) => {
+      // console.log(responseJson)
+
+      if (responseJson.statusCode === 400) {
+        !task ? alert(responseJson.message) : alert(responseJson.message);
+      } else {
+        alert('Data added successfully');
+      }
+    })
+    .catch((error) => {
+      console.error(error);
+    });
+};
 
 const AddTaskScreen = () => {
+  const [task, setTask] = useState('');
+  const [category, setCategory] = useState('');
+  const [date, setDate] = useState('');
+  const [time, setTime] = useState('');
+  const [token, setToken] = useState('');
+  getData()
+    .then((token) => setToken(token))
+    .catch((error) => console.error(error));
+
+  const setCatName = (catName) => {
+    setCategory(catName);
+  };
+  const sendData = () => {
+    sendToStore(task, category, date, time, token);
+  };
   return (
-    <SafeAreaView style={styles.screen}>
+    <View style={styles.screen}>
       <Text style={styles.title}>Title</Text>
       <TextInput
         placeholder="Eg.Parent Teacher Meeting"
         style={styles.taskName}
         placholderColor="rgba(155,155,155,0.57)"
+        onChangeText={(task) => setTask(task)}
       />
       <Text style={styles.catText}>Category</Text>
       <View>
@@ -25,13 +79,23 @@ const AddTaskScreen = () => {
           <CatButton
             style={{backgroundColor: '#74ACF1', width: 68}}
             text={'Work'}
+            onSetName={setCatName}
           />
           <CatButton
             style={{backgroundColor: '#86DFDF', width: 91}}
             text={'Personal'}
+            onSetName={setCatName}
           />
-          <CatButton style={{backgroundColor: '#96CFA1'}} text={'Health'} />
-          <CatButton style={{backgroundColor: '#B3B3FF'}} text={'Social'} />
+          <CatButton
+            style={{backgroundColor: '#96CFA1'}}
+            text={'Health'}
+            onSetName={setCatName}
+          />
+          <CatButton
+            style={{backgroundColor: '#B3B3FF'}}
+            text={'Social'}
+            onSetName={setCatName}
+          />
         </View>
         <Text style={styles.dateTitle}>Choose Date & time</Text>
         <View
@@ -41,15 +105,22 @@ const AddTaskScreen = () => {
             marginTop: 13,
             width: '100%',
           }}>
-          <TextInput placeholder="22/09/2020" style={styles.dateInput} />
-          <TextInput placeholder="8:30 pm" style={styles.timeInput} />
+          <TextInput
+            placeholder="22/09/2020"
+            style={styles.dateInput}
+            onChangeText={(date) => setDate(date)}
+          />
+          <TextInput
+            placeholder="8:30 pm"
+            style={styles.timeInput}
+            onChangeText={(time) => setTime(time)}
+          />
         </View>
-
-        <TouchableOpacity style={styles.doneButton}>
+        <TouchableOpacity style={styles.doneButton} onPress={sendData}>
           <Text style={styles.doneText}>Done</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -65,7 +136,7 @@ const styles = StyleSheet.create({
     fontFamily: 'SF Pro Text',
     fontSize: 20,
     lineHeight: 19,
-    marginTop: 116,
+    marginTop: 28,
   },
   taskName: {
     height: 51,
@@ -77,16 +148,13 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginTop: 7,
     paddingLeft: 12,
-    // height: 19px;
-    // width: 243px;
     color: 'rgba(155,155,155,0.57)',
     fontFamily: 'SF Pro Text Light Italic',
     fontStyle: 'italic',
+    // fontWeight:'bold',
     fontSize: 19,
 
     //font-weight: 300;
-    // letter-spacing: -0.94px;
-    // line-height: 20px;
   },
   catText: {
     width: 144,
@@ -94,8 +162,6 @@ const styles = StyleSheet.create({
     color: 'rgba(74,74,74,0.83)',
     fontFamily: 'SF Pro Text',
     fontSize: 19,
-    // letter-spacing: 0;
-    // line-height: 19px;
   },
   parentButton: {
     flex: 1,
@@ -116,7 +182,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   dateInput: {
-    // box-sizing: border-box;
 
     height: 51,
     width: 163,
@@ -140,7 +205,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   doneButton: {
-    // box-sizing: border-box;
+
     height: 56,
     width: 173,
     marginTop: '60%',
