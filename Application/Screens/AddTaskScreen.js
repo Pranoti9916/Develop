@@ -6,9 +6,13 @@ import {
   TouchableOpacity,
   TextInput,
 } from 'react-native';
+import {useDispatch} from 'react-redux';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import CatButton from '../Components/CategorySelect';
-import AsyncStorage from '@react-native-community/async-storage';
+import * as taskActions from '../store/actions/tasksActions';
+import moment from 'moment';
+
 const getData = async () => {
   let token = '';
   try {
@@ -19,50 +23,48 @@ const getData = async () => {
   }
 };
 
-const sendToStore = (task, category, date, time, token) => {
-  return fetch('https://tudu-node.herokuapp.com/tasks', {
-    method: 'POST',
-    headers: {
-      Authorization: 'Bearer' + '  ' + token,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      title: task,
-      category,
-    }),
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .then((responseJson) => {
-      // console.log(responseJson)
-
-      if (responseJson.statusCode === 400) {
-        !task ? alert(responseJson.message) : alert(responseJson.message);
-      } else {
-        alert('Data added successfully');
-      }
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-
-const AddTaskScreen = () => {
-  const [task, setTask] = useState('');
+const AddTaskScreen = (props) => {
+  const taskData = props.route.params.taskData;
+  const givenDate = props.route.params.givenDate;
+  const givenTime = props.route.params.givenTime;
+  console.log('Add task' + taskData);
+  const [task, setTask] = useState(taskData ? taskData.title : '');
   const [category, setCategory] = useState('');
-  const [date, setDate] = useState('');
-  const [time, setTime] = useState('');
+  const [date, setDate] = useState(taskData ? givenDate : '');
+  const [time, setTime] = useState(taskData ? givenTime : '');
   const [token, setToken] = useState('');
+  const status = taskData.status;
+  const taskId = taskData.id;
   getData()
     .then((token) => setToken(token))
     .catch((error) => console.error(error));
-
+  const dispatch = useDispatch();
   const setCatName = (catName) => {
     setCategory(catName);
   };
+  const dateTime = date + ' ' + time;
+  console.log('Add task screen');
+  const timeStamp = moment(dateTime, 'DD/MM/YYYY h:mm a') / 1000;
+  //console.log('moment' + moment(dateTime, 'DD/MM/YYYY h:mm a') / 1000);
+  //const time = moment(x *1000).format('DD/MM/YYYY h:mm');
+
+  // useEffect(() => {
+  //   dispatch(taskActions.createTask());
+  // }, [dispatch]);
   const sendData = () => {
-    sendToStore(task, category, date, time, token);
+    taskData.title
+      ? dispatch(
+          taskActions.updateTask(
+            task,
+            category,
+            status,
+            taskId,
+            date,
+            time,
+            token,
+          ),
+        )
+      : dispatch(taskActions.createTask(task, category, timeStamp, token));
   };
   return (
     <View style={styles.screen}>
@@ -71,6 +73,7 @@ const AddTaskScreen = () => {
         placeholder="Eg.Parent Teacher Meeting"
         style={styles.taskName}
         placholderColor="rgba(155,155,155,0.57)"
+        value={task}
         onChangeText={(task) => setTask(task)}
       />
       <Text style={styles.catText}>Category</Text>
@@ -108,14 +111,17 @@ const AddTaskScreen = () => {
           <TextInput
             placeholder="22/09/2020"
             style={styles.dateInput}
+            value={date}
             onChangeText={(date) => setDate(date)}
           />
           <TextInput
             placeholder="8:30 pm"
             style={styles.timeInput}
+            value={time}
             onChangeText={(time) => setTime(time)}
           />
         </View>
+
         <TouchableOpacity style={styles.doneButton} onPress={sendData}>
           <Text style={styles.doneText}>Done</Text>
         </TouchableOpacity>
@@ -146,15 +152,13 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderWidth: 1,
     borderRadius: 7,
-    marginTop: 7,
+    marginTop: 8,
     paddingLeft: 12,
-    color: 'rgba(155,155,155,0.57)',
+    // color: 'rgba(155,155,155,0.57)',
     fontFamily: 'SF Pro Text Light Italic',
     fontStyle: 'italic',
-    // fontWeight:'bold',
+    fontWeight: 'bold',
     fontSize: 19,
-
-    //font-weight: 300;
   },
   catText: {
     width: 144,
@@ -169,7 +173,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexWrap: 'wrap',
     width: '100%',
-    marginTop: 9,
+    marginTop: 10,
     marginBottom: 35,
   },
   dateTitle: {
@@ -182,7 +186,6 @@ const styles = StyleSheet.create({
     lineHeight: 19,
   },
   dateInput: {
-
     height: 51,
     width: 163,
     borderColor: 'rgba(151,151,151,0.44)',
@@ -205,7 +208,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   doneButton: {
-
     height: 56,
     width: 173,
     marginTop: '60%',

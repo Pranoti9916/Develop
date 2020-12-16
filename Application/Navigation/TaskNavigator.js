@@ -1,14 +1,14 @@
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import {NavigationContainer} from '@react-navigation/native';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from '../Screens/HomeScreen';
 import AllTaskScreen from '../Screens/AllTaskScreen';
 import CategoryDetailScreen from '../Screens/CategoryDetailView';
 import AddTaskScreen from '../Screens/AddTaskScreen';
-import LogInPage from '../Components/LoginPage';
+import LogInPage from '../Screens/LoginScreen';
 import SignUpPage from '../Screens/SignUpScreen';
 
 const homeTab = createBottomTabNavigator();
@@ -23,7 +23,7 @@ function LoginP() {
     </Stack.Navigator>
   );
 }
-function HomeTabs() {
+export function HomeTabs() {
   return (
     <homeTab.Navigator
       initialRouteName="Home"
@@ -40,18 +40,39 @@ function HomeTabs() {
 function MyTabs() {
   return (
     <Stack.Navigator>
-      {/*<Stack.Screen name="Login" component={LogInPage} />*/}
       <Stack.Screen
         options={{headerShown: false}}
-        name="Home"
+        name="HomeTab"
         component={HomeTabs}
       />
       <Stack.Screen
         name="My Tasks"
         component={CategoryDetailScreen}
-        options={({route}) => ({headerBackTitle: route.params.categoryName})}
+        options={({navigation, route}) => ({
+          title: Platform.OS === 'ios' ? '' : route.params.categoryName,
+          headerBackTitle: route.params.categoryName,
+          headerBackTitleStyle: styles.header,
+          headerTitleStyle: styles.header,
+          // headerLeft: () => (
+          //   <HeaderBackButton
+          //     label={route.params.categoryName}
+          //     onPress={() => {
+          //       navigation.goBack('Home');
+          //     }}
+          //   />
+          // ),
+        })}
       />
-      <Stack.Screen name="Add Task" component={AddTaskScreen} />
+      <Stack.Screen
+        name="Add Task"
+        component={AddTaskScreen}
+        options={{
+          headerBackTitle: 'Add Task',
+          title: Platform.OS === 'ios' ? '' : 'Add Task',
+          headerBackTitleStyle: styles.header,
+          headerTitleStyle: styles.header,
+        }}
+      />
     </Stack.Navigator>
   );
 }
@@ -84,6 +105,13 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'solid',
     backgroundColor: '#FFFFFF',
+  },
+  header: {
+    height: 22,
+    //width: 85,
+    color: '#4A90E2',
+    fontFamily: 'Microsoft Sans Serif',
+    fontSize: 20,
   },
 });
 export default Nav;

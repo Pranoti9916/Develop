@@ -17,11 +17,10 @@ import {
 const SignUpPage = ({navigation}) => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
-  function secd() {
+  function signUp() {
     return fetch('https://tudu-node.herokuapp.com/auth/signup', {
       method: 'POST',
       headers: {
-        // Accept: 'application/json',
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
@@ -50,8 +49,6 @@ const SignUpPage = ({navigation}) => {
             },
             {text: 'OK', onPress: () => navigation.navigate('Login')},
           ]);
-        } else if (!userEmail) {
-          alert(responseJson.message);
         } else {
           alert(responseJson.message);
         }
@@ -84,7 +81,7 @@ const SignUpPage = ({navigation}) => {
             onChangeText={(UserPassword) => setUserPassword(UserPassword)}
           />
 
-          <TouchableOpacity style={styles.SignUpButton} onPress={secd}>
+          <TouchableOpacity style={styles.SignUpButton} onPress={signUp}>
             <Text style={styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
           <Text
@@ -112,8 +109,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   tuduText: {
-    // height: 48,
-    // width: 114,
     marginTop: Platform.OS === 'ios' ? 308 : 210,
     color: '#4A90E2',
     fontFamily: 'SF Pro Text',

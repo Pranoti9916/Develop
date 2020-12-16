@@ -1,58 +1,36 @@
 import React, {useState, useEffect} from 'react';
 import {List, ListItem} from 'native-base';
 import {SafeAreaView, StyleSheet, Text} from 'react-native';
-
+import AsyncStorage from '@react-native-community/async-storage';
 import {useDispatch, useSelector} from 'react-redux';
 import CustomCard from '../Components/Card';
 import * as taskActions from '../store/actions/tasksActions';
-// const getData = async () => {
-//   let token = '';
-//   try {
-//     token = await AsyncStorage.getItem('accessToken');
-//     return token;
-//   } catch (error) {
-//     console.error(error);
-//   }
-// };
+
+const getData = async () => {
+  let token = '';
+  try {
+    token = await AsyncStorage.getItem('accessToken');
+    return token;
+  } catch (error) {
+    console.error(error);
+  }
+};
 const AllTaskScreen = ({navigation}) => {
   // console.log("all tasks")
-  // const [token, setToken] = useState('');
-  // const [data, setData] = useState([]);
-  // getData()
-  //   .then((token) => setToken(token))
-  //   .catch((error) => console.error(error));
-  // console.log(token)
-
-  // useEffect(() => {
-  //   console.log("ji"+i++)
-  //   fetch('https://tudu-node.herokuapp.com/tasks', {
-  //     headers: {
-  //       // Accept: 'application/json',
-  //       Authorization: 'Bearer  ' + token,
-  //       'Content-Type': 'application/json',
-  //     },
-  //   })
-  //     .then((response) => {
-  //        console.log(response)
-  //       return response.json();
-  //     })
-  //     .then((responseJson) => {
-  //       console.log(responseJson)
-  //       setData(responseJson);
-  //       // console.log(token1)
-  //       // setToken1(responseJson)
-  //       // console.log(token1)
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // }, []);
-  const products = useSelector((state) => state.taskReduce.availableTasks);
+  const [token, setToken] = useState('');
+  getData()
+    .then((token) => setToken(token))
+    .catch((error) => console.error(error));
+  //console.log(token);
+  let tasks = useSelector((state) => state.taskReduce.availableTasks);
+  console.log(tasks);
   const dispatch = useDispatch();
+  console.log('all task screen');
+  // console.log()
 
   useEffect(() => {
-    dispatch(taskActions.fetchTasks());
-  }, [dispatch]);
+    dispatch(taskActions.fetchTasks(token));
+  }, [dispatch, token]);
 
   return (
     <SafeAreaView style={styles.screen}>
@@ -67,10 +45,15 @@ const AllTaskScreen = ({navigation}) => {
           <Text>Later</Text>
         </ListItem>
       </List>
-      {products.map((r) => (
-        <CustomCard d={r} key={r.id} navigation={navigation} />
+      {tasks.map((taskData) => (
+        <CustomCard
+          taskData={taskData}
+          key={taskData ? taskData.id : Math.floor(Math.random() * 101)}
+          navigation={navigation}
+          token={token}
+          alltask={true}
+        />
       ))}
-      {/*<CustomCard navigation={navigation}/>*/}
     </SafeAreaView>
   );
 };
