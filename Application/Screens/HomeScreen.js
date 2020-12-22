@@ -23,16 +23,23 @@ const HomeScreen = ({route, navigation}) => {
   console.log('homescreen');
   let tasks = useSelector((state) => state.taskReduce.availableTasks);
   console.log(tasks);
-  let countedCategory = tasks.reduce(function (allCats, name) {
-    if (name.category in allCats) {
-      allCats[name.category]++;
+  let completeCount=0;
+  let openCount=0;
+  let countedCategory = tasks.reduce(function (allCats, task) {
+    if (task.category in allCats) {
+      allCats[task.category]++;
+      task.status==='Open'?openCount++:completeCount++;
     } else {
-      console.log(name.category);
-      allCats[name.category] = 1;
+      console.log(task.category);
+      allCats[task.category] = 1;
+      task.status==='Open'?openCount++:completeCount++;
     }
     return allCats;
   }, {});
   console.log(countedCategory);
+  console.log(openCount);
+  console.log(completeCount);
+
 
   // const datum = Date.parse('02/13/2009 23:31');
   // const x = datum / 1000;
@@ -65,7 +72,35 @@ const HomeScreen = ({route, navigation}) => {
           <SvgClock />
         </View>
 
-        <View style={styles.rectangle} />
+        <View style={styles.rectangle} >
+          {/*<View style={{flexDirection: 'row',justifyContent: 'space-between'}}>*/}
+          <View style={styles.stats}>
+            <View style={{justifyContent:'center',alignItems: "center"}}>
+              <Text style={styles.number}>{completeCount}</Text>
+              <Text style={styles.total}>Overdue</Text>
+            </View>
+
+            <Text style={styles.div}></Text>
+            <View style={{justifyContent:'center',alignItems: "center"}}>
+              <Text style={styles.number}>{openCount}</Text>
+              <Text style={styles.total}>Open</Text>
+            </View>
+
+            <Text style={styles.div}></Text>
+            <View style={{justifyContent:'center',alignItems: "center"}}>
+              <Text style={styles.number}>{openCount+completeCount}</Text>
+              <Text style={styles.total}>Total</Text>
+            </View>
+           {/* <Text style={{fontSize:22}}>{openCount}</Text>*/}
+           {/* <Text style={{fontSize:22}}>{openCount}</Text>*/}
+           {/* <Text style={{fontSize:22}}>{openCount}</Text>*/}
+           {/*<Text style={{fontSize:22}}>Overdue</Text>*/}
+           {/*<Text style={{fontSize:22}}>Open</Text>*/}
+           {/*<Text style={{fontSize:22}}>Total</Text>*/}
+         </View>
+
+
+        </View>
         <Text style={styles.dailyProgress}>Daily Progress</Text>
         <View style={styles.parentButton}>
           <CButton
@@ -138,6 +173,10 @@ const styles = StyleSheet.create({
     borderStyle: 'solid',
     borderRadius: 8,
     marginTop: 30,
+    //flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems:'center'
+    //flexWrap: 'wrap',
   },
   dailyProgress: {
     height: 21,
@@ -156,6 +195,35 @@ const styles = StyleSheet.create({
     justifyContent: 'space-around',
     flexWrap: 'wrap',
   },
+  stats: {
+  height: 47,
+  width: 275,
+   justifyContent:'space-between',
+    flexDirection: 'row',
+   // flexWrap: 'wrap'
+},
+  div :{
+ // box-sizing: border-box;
+  height: 38,
+  width: 2,
+  borderWidth: 1,
+    borderStyle:'solid',
+    borderColor:'rgba(155,155,155,0.39)',
+},
+  number: {
+    height: 25,
+    width: 26,
+    color: '#4A4A4A',
+    fontFamily: "Microsoft Sans Serif",
+    fontSize: 22,
+},
+  total: {
+  height: 17,
+  // width: 42,
+  color: '#737274',
+  fontFamily: "Microsoft Sans Serif",
+  fontSize: 15,
+}
 });
 
 export default HomeScreen;

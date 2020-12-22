@@ -80,9 +80,12 @@ const LogInPage = ({navigation}) => {
           alert(responseJson.message);
         } else if (responseJson.accessToken) {
           // console.log('acce' + responseJson.accessToken);
-          storeData(responseJson.accessToken, userEmail);
+          storeData(responseJson.accessToken, userEmail).then(()=>navigation.navigate('MyTabs', {
+            screen: 'HomeTab',
+            params: {user: userEmail},
+          }))
 
-          navigation.replace('MyTabs');
+
         } else {
           alert('Please check your email id or password');
         }

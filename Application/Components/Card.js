@@ -9,7 +9,7 @@ const CustomCard = (props) => {
   const {id: taskId, title, category, status, timestamp} = props.taskData;
   const dispatch = useDispatch();
   let borderColor = '';
-  if (props.catscreen) {
+  if (props.catScreen) {
     borderColor = '#74ACF1';
   } else {
     switch (props.taskData.category) {
@@ -26,9 +26,7 @@ const CustomCard = (props) => {
         borderColor = '#74ACF1';
     }
   }
-  //console.log(timestamp);
   const dateTime = moment(timestamp * 1000).format('DD/MM/YYYY h:mm a');
-  //console.log(dateTime);
   let date = dateTime.split(' ');
   const time = date[1] + ' ' + date[2];
 

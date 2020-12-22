@@ -27,7 +27,7 @@ export const loginUser = (email, password) => {
     if (responseData.statusCode == 404) {
       alert(responseData.message);
     } else if (responseData.accessToken) {
-      dispatch(login(email, responseData.accessToken));
+     // dispatch(login(email, responseData.accessToken));
       saveDataToStorage(responseData.accessToken, email);
       //navigation.replace('Mytab');
     } else {

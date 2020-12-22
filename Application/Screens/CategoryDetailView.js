@@ -30,6 +30,7 @@ const CategoryDetailScreen = (props) => {
     .then((token) => setToken(token))
     .catch((error) => console.error(error));
   let resData = useSelector((state) => state.taskReduce.CatTasks);
+  console.log(resData)
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(taskActions.fetchTasksByCat(token, categoryName));
@@ -38,7 +39,7 @@ const CategoryDetailScreen = (props) => {
   return (
     <View style={{flex: 1}}>
       <FlatList
-        keyExtractor={(item, index) => item.id}
+        keyExtractor={(item, index) => item.id.toString()}
         data={resData}
         renderItem={(itemData) => (
           <CustomCard

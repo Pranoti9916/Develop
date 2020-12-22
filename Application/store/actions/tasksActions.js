@@ -8,7 +8,7 @@ export const FETCH_CAT_TASK = 'FETCH_CAT_TASK';
 
 export const fetchTasks = (token) => {
   let taskData = [];
-  console.log('fetch token' + token);
+ // console.log('fetch token' + token);
   return async (dispatch) => {
     try {
       const response = await fetch('https://tudu-node.herokuapp.com/tasks', {
@@ -68,9 +68,11 @@ export const createTask = (task, category, timestamp, token) => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          title: task,
           category,
+          status:'Open',
           timestamp,
+          title: task,
+
         }),
       });
       const responseData = await response.json();
@@ -86,9 +88,10 @@ export const createTask = (task, category, timestamp, token) => {
     dispatch({
       type: CREATE_TASK,
       taskData: {
-        task,
         category,
+        status:'Open',
         timestamp,
+        title: task,
       },
     });
   };

@@ -19,7 +19,8 @@ export function SvgClock() {
     <SvgUri
       width="76"
       height="70"
-      uri="https://assets.v7-io.invisionapp.com/assets/A_MGFjZjlkZDY2YjhlM2JmOfoBaNbRIdM--ifYJcm5BjajG8H9wTEOtkIqAopUZ4Rbn5SPyi8Y16Duey84IvFK3ruXV9tHR5v1PKxbzRMbL7npa9HtxSotnq2tyrUIlhRR?filename=tasks.svg"
+     // uri="https://assets.v7-io.invisionapp.com/assets/A_MGFjZjlkZDY2YjhlM2JmOfoBaNbRIdM--ifYJcm5BjajG8H9wTEOtkIqAopUZ4Rbn5SPyi8Y16Duey84IvFK3ruXV9tHR5v1PKxbzRMbL7npa9HtxSotnq2tyrUIlhRR?filename=tasks.svg"
+      uri="https://assets.v7-io.invisionapp.com/assets/A_MGFjZjlkZDY2YjhlM2JmOdQayWVB_8WlFyNjlsFNmwUrLhIbC03Le7P2JmnEicXx99bbbpLbCTDTKVZSx8HFuS2CjC3_mo0r_bdDE9EegdrsKz-idTk_HbnJZy96vetw?filename=tasks.svg"
     />
   );
 }
