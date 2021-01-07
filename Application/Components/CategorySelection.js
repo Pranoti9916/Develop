@@ -1,15 +1,15 @@
 import React from 'react';
 import {TouchableOpacity, Text, StyleSheet} from 'react-native';
 
-const CatButton = (props) => {
+const AddCategoryButton = (props) => {
   const setCategoryName = () => {
-    props.onSetName(props.text);
+    props.onSetName(props.categoryName);
   };
   return (
     <TouchableOpacity
       style={{...styles.button, ...props.style}}
       onPress={setCategoryName}>
-      <Text style={styles.text}>{props.text}</Text>
+      <Text style={styles.text}>{props.categoryName}</Text>
     </TouchableOpacity>
   );
 };
@@ -25,10 +25,9 @@ const styles = StyleSheet.create({
   text: {
     fontFamily: 'SF Pro Text',
     fontWeight: 'bold',
-    //height: 17,
     color: '#FFFFFF',
     fontSize: 14,
   },
 });
 
-export default CatButton;
+export default AddCategoryButton;

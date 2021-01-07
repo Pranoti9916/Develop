@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-community/async-storage';
-import {useState} from 'react';
 
 const getData = async () => {
   let token = '';
@@ -13,9 +12,8 @@ const getData = async () => {
 
 export const getToken = () => {
   let authToken = '';
-  getData()
-    .then((token) => (authToken = token))
+  authToken = getData()
+    .then((token) => token)
     .catch((error) => console.error(error));
-
   return authToken;
 };

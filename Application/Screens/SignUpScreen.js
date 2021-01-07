@@ -1,18 +1,16 @@
 import React, {useState} from 'react';
 import {
-  View,
-  StyleSheet,
+  Alert,
+  ImageBackground,
+  Linking,
+  SafeAreaView,
   Text,
   TextInput,
-  Platform,
   TouchableOpacity,
-  ImageBackground,
-  Dimensions,
-  KeyboardAvoidingView,
-  SafeAreaView,
-  Alert,
-  Linking,
+  View,
 } from 'react-native';
+import Styles from '../../assets/styles/LogInStyle';
+import CombineShape from '../Components/combinedShape';
 
 const SignUpPage = ({navigation}) => {
   const [userEmail, setUserEmail] = useState('');
@@ -61,116 +59,41 @@ const SignUpPage = ({navigation}) => {
   return (
     <SafeAreaView>
       <ImageBackground
-        style={styles.bgImage}
-        source={require('/Users/ppatil/Desktop/TODOApp/assets/bg.png')}>
-        <View style={styles.screen}>
-          <Text style={styles.tuduText}>TUDU</Text>
-
+        style={Styles.bgImage}
+        source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/bg.png')}>
+        <CombineShape />
+        <View style={Styles.screen}>
           <TextInput
             placeholder="Username"
             onChangeText={(UserEmail) => setUserEmail(UserEmail)}
             keyboardType="email-address"
             autoCapitalize="none"
             returnKeyType="next"
-            style={styles.inputText}
+            style={Styles.inputText}
           />
           <TextInput
             placeholder="Password"
-            style={styles.inputText}
+            style={Styles.inputText}
             secureTextEntry={true}
             onChangeText={(UserPassword) => setUserPassword(UserPassword)}
           />
 
-          <TouchableOpacity style={styles.SignUpButton} onPress={signUp}>
-            <Text style={styles.buttonText}>Sign Up</Text>
+          <TouchableOpacity style={Styles.button} onPress={signUp}>
+            <Text style={Styles.buttonText}>Sign Up</Text>
           </TouchableOpacity>
           <Text
-            style={styles.signupOption}
+            style={{...Styles.signupOption, color: '#4A90E2'}}
             onPress={() => {
               Linking.openURL(
                 'https://docs.worldsecuresystems.com/user-manual/site-settings/admin-users/admin-users-login-issues',
               );
             }}>
-            Trouble signin up?
+            Trouble signing up?
           </Text>
         </View>
       </ImageBackground>
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  combinedShape: {
-    height: 90.8,
-    width: 92.8,
-  },
-  screen: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  tuduText: {
-    marginTop: Platform.OS === 'ios' ? 308 : 210,
-    color: '#4A90E2',
-    fontFamily: 'SF Pro Text',
-    fontSize: 40,
-    marginRight: 130,
-    marginLeft: 130,
-    marginBottom: 84,
-  },
-  inputText: {
-    width: 305,
-    borderRadius: 30,
-    borderWidth: 1,
-    marginLeft: 35,
-    marginRight: 35,
-    marginBottom: 32,
-    backgroundColor: 'white',
-    fontFamily: 'Microsoft Sans Serif',
-    fontSize: 15,
-    borderColor: 'rgba(151,151,151,0.44)',
-    ...Platform.select({
-      ios: {
-        paddingBottom: 22,
-        paddingTop: 22,
-        paddingLeft: 32,
-      },
-      android: {
-        paddingBottom: 10,
-        paddingTop: 10,
-        paddingLeft: 16,
-      },
-    }),
-  },
-  SignUpButton: {
-    width: 173,
-    borderRadius: 30,
-    height: 63,
-    backgroundColor: '#4A90E2',
-    marginLeft: 101,
-    marginRight: 101,
-    marginTop: 26,
-    marginBottom: 35,
-    justifyContent: 'center',
-  },
-  buttonText: {
-    color: '#FFFFFF',
-    fontSize: 21,
-    fontFamily: 'SF Pro Text',
-    textAlign: 'center',
-
-    lineHeight: 25,
-  },
-  signupOption: {
-    color: '#4A90E2',
-    fontFamily: 'Microsoft Sans Serif',
-    margin: 24,
-    fontSize: 20,
-    textAlign: 'center',
-  },
-  bgImage: {
-    width: Math.round(Dimensions.get('window').width),
-    height: Math.round(Dimensions.get('window').height),
-  },
-});
 
 export default SignUpPage;

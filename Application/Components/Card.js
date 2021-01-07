@@ -4,7 +4,7 @@ import React from 'react';
 import * as taskActions from '../store/actions/tasksActions';
 import {useDispatch} from 'react-redux';
 import moment from 'moment';
-import {SvgTime} from './svgComponent';
+import {SvgTimeComponent} from './svgComponent';
 const CustomCard = (props) => {
   const {id: taskId, title, category, status, timestamp} = props.taskData;
   const dispatch = useDispatch();
@@ -32,14 +32,25 @@ const CustomCard = (props) => {
 
   if (status == 'Closed') {
     return (
-      <Card style={{borderLeftWidth: 10, borderLeftColor: borderColor}}>
+      <Card
+        style={{
+          borderLeftWidth: 10,
+          borderLeftColor: 'rgba(116,172,241,0.42)',
+        }}>
         <CardItem>
           <Button style={{...styles.button, backgroundColor: borderColor}}>
             <Text style={styles.buttonText}>{category}</Text>
           </Button>
         </CardItem>
         <View style={{flexDirection: 'row', marginBottom: 3}}>
-          <Text style={styles.complete}>{props.taskData.title}</Text>
+          <Text
+            style={{
+              ...styles.taskName,
+              textDecorationLine: 'line-through',
+              color: '#4A4A4A',
+            }}>
+            {props.taskData.title}
+          </Text>
         </View>
         <View
           style={{
@@ -48,16 +59,16 @@ const CustomCard = (props) => {
             marginBottom: 15,
             width: 376,
           }}>
-          <View style={{marginTop: 3}}>
-            <SvgTime />
+          <View style={{marginTop: 3, color: '#4A4A4A'}}>
+            <SvgTimeComponent />
           </View>
 
-          <Text style={{marginLeft: 4}}>{time}</Text>
+          <Text style={{marginLeft: 4, color: '#4A4A4A'}}>{time}</Text>
         </View>
         <TouchableOpacity
           onPress={() => dispatch(taskActions.deleteTask(taskId, props.token))}>
           <Image
-            source={require('/Users/ppatil/Desktop/TODOApp/assets/delete.png')}
+            source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/delete.png')}
             style={styles.icon}
           />
         </TouchableOpacity>
@@ -82,8 +93,7 @@ const CustomCard = (props) => {
                 category,
                 'Closed',
                 taskId,
-                date,
-                time,
+                timestamp,
                 props.token,
               ),
             );
@@ -96,56 +106,22 @@ const CustomCard = (props) => {
               taskData: props.taskData,
               givenDate: date[0],
               givenTime: time,
+              token: props.token,
             })
           }>
           <Image
-            source={require('/Users/ppatil/Desktop/TODOApp/assets/edit.png')}
+            source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/edit.png')}
             style={{...styles.icon, marginRight: 18}}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => dispatch(taskActions.deleteTask(taskId, props.token))}>
           <Image
-            source={require('/Users/ppatil/Desktop/TODOApp/assets/delete.png')}
+            source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/delete.png')}
             style={styles.icon}
           />
         </TouchableOpacity>
       </View>
-
-      {/*<CardItem style={{justifyContent: 'center',alignItems:'center'}}>*/}
-      {/*    <TouchableOpacity  onPress={() => alert('Card clicked')}>*/}
-      {/*        <Image*/}
-      {/*            source={require('/Users/ppatil/Desktop/TODOApp/assets/edit.png')}*/}
-      {/*            style={styles.editIcon}*/}
-      {/*        />*/}
-      {/*    </TouchableOpacity>*/}
-      {/*    <TouchableOpacity  onPress={() => alert('Card clicked')}>*/}
-      {/*        <Image*/}
-      {/*            source={require('/Users/ppatil/Desktop/TODOApp/assets/delete.png')}*/}
-      {/*            style={styles.deleteIcon}*/}
-      {/*        />*/}
-      {/*    </TouchableOpacity>*/}
-
-      {/*</CardItem>*/}
-
-      {/*        <CardItem style={{flex:1,justifyContent: "flex-end"}} >*/}
-      {/*<TouchableOpacity style={{ justifyContent: 'center',alignItems:'flex-end'}} onPress={() => alert('Card clicked')}>*/}
-      {/*    <Image*/}
-      {/*        source={require('/Users/ppatil/Desktop/TODOApp/assets/edit.png')}*/}
-      {/*        style={styles.editIcon}*/}
-      {/*    />*/}
-
-      {/*</TouchableOpacity>*/}
-      {/*        </CardItem>*/}
-      {/*          <CardItem style={{flex:1,justifyContent: "flex-end"}}>*/}
-      {/*<TouchableOpacity style={{ justifyContent: 'center',alignItems:'flex-end'}} onPress={() => alert('Card clicked')}>*/}
-      {/*    <Image*/}
-      {/*        source={require('/Users/ppatil/Desktop/TODOApp/assets/delete.png')}*/}
-      {/*        style={styles.deleteIcon}*/}
-      {/*    />*/}
-      {/*</TouchableOpacity>*/}
-
-      {/*        </CardItem>*/}
       <View
         style={{
           marginLeft: 26,
@@ -154,7 +130,7 @@ const CustomCard = (props) => {
           width: 376,
         }}>
         <View style={{marginTop: 3}}>
-          <SvgTime />
+          <SvgTimeComponent />
         </View>
 
         <Text style={{marginLeft: 4}}>{time}</Text>
@@ -165,10 +141,7 @@ const CustomCard = (props) => {
 
 const styles = StyleSheet.create({
   rectangle: {
-    // height: 81,
-    // width: 10,
     borderLeftWidth: 10,
-    // borderLeftColor: '#74ACF1',
   },
   buttonText: {
     color: '#FFFFFF',
@@ -178,26 +151,18 @@ const styles = StyleSheet.create({
   icon: {
     height: 22,
     width: 20,
-    // marginBottom:47,
   },
   button: {
     width: 61,
     height: 24,
     borderRadius: 9,
-    // backgroundColor: '#74ACF1',
     justifyContent: 'center',
   },
   taskName: {
-    // height: 21,
     width: '75%',
-    color: '#4A4A4A',
     fontFamily: 'Microsoft Sans Serif',
     fontSize: 18,
     marginLeft: 26,
-    //textDecorationLine: 'line-through',
-  },
-  complete: {
-    textDecorationLine: 'line-through',
   },
 });
 

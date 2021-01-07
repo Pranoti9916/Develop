@@ -1,56 +1,35 @@
 import React, {useState} from 'react';
 import {
-  View,
-  Text,
   StyleSheet,
-  TouchableOpacity,
+  Text,
   TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import {useDispatch} from 'react-redux';
-import AsyncStorage from '@react-native-community/async-storage';
 
-import CatButton from '../Components/CategorySelect';
+import AddCategoryButton from '../Components/CategorySelection';
 import * as taskActions from '../store/actions/tasksActions';
 import moment from 'moment';
-
-const getData = async () => {
-  let token = '';
-  try {
-    token = await AsyncStorage.getItem('accessToken');
-    return token;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const AddTaskScreen = (props) => {
   const taskData = props.route.params.taskData;
   const givenDate = props.route.params.givenDate;
   const givenTime = props.route.params.givenTime;
-  console.log('Add task' + taskData);
+  const token = props.route.params.token;
   const [task, setTask] = useState(taskData ? taskData.title : '');
   const [category, setCategory] = useState('');
   const [date, setDate] = useState(taskData ? givenDate : '');
   const [time, setTime] = useState(taskData ? givenTime : '');
-  const [token, setToken] = useState('');
   const status = taskData.status;
   const taskId = taskData.id;
-  getData()
-    .then((token) => setToken(token))
-    .catch((error) => console.error(error));
+
   const dispatch = useDispatch();
   const setCatName = (catName) => {
     setCategory(catName);
   };
   const dateTime = date + ' ' + time;
-  console.log('Add task screen');
   const timeStamp = moment(dateTime, 'DD/MM/YYYY h:mm a') / 1000;
-  //console.log('moment' + moment(dateTime, 'DD/MM/YYYY h:mm a') / 1000);
-  //const time = moment(x *1000).format('DD/MM/YYYY h:mm');
-
-  // useEffect(() => {
-  //   dispatch(taskActions.createTask());
-  // }, [dispatch]);
   const sendData = () => {
     taskData.title
       ? dispatch(
@@ -59,8 +38,7 @@ const AddTaskScreen = (props) => {
             category,
             status,
             taskId,
-            date,
-            time,
+            timeStamp,
             token,
           ),
         )
@@ -79,24 +57,24 @@ const AddTaskScreen = (props) => {
       <Text style={styles.catText}>Category</Text>
       <View>
         <View style={styles.parentButton}>
-          <CatButton
+          <AddCategoryButton
             style={{backgroundColor: '#74ACF1', width: 68}}
-            text={'Work'}
+            categoryName={'Work'}
             onSetName={setCatName}
           />
-          <CatButton
+          <AddCategoryButton
             style={{backgroundColor: '#86DFDF', width: 91}}
-            text={'Personal'}
+            categoryName={'Personal'}
             onSetName={setCatName}
           />
-          <CatButton
+          <AddCategoryButton
             style={{backgroundColor: '#96CFA1'}}
-            text={'Health'}
+            categoryName={'Health'}
             onSetName={setCatName}
           />
-          <CatButton
+          <AddCategoryButton
             style={{backgroundColor: '#B3B3FF'}}
-            text={'Social'}
+            categoryName={'Social'}
             onSetName={setCatName}
           />
         </View>
@@ -154,7 +132,6 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     marginTop: 8,
     paddingLeft: 12,
-    // color: 'rgba(155,155,155,0.57)',
     fontFamily: 'SF Pro Text Light Italic',
     fontStyle: 'italic',
     fontWeight: 'bold',

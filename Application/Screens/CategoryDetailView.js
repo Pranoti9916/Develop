@@ -1,69 +1,85 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {
-  View,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
   FlatList,
+  Image,
+  ImageBackground,
+  StyleSheet,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import AsyncStorage from '@react-native-community/async-storage';
 import CustomCard from '../Components/Card';
 import {useDispatch, useSelector} from 'react-redux';
 import * as taskActions from '../store/actions/tasksActions';
-//import index from 'redux-persist/types/tests/index';
-
-const getData = async () => {
-  let token = '';
-  try {
-    token = await AsyncStorage.getItem('accessToken');
-    return token;
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const CategoryDetailScreen = (props) => {
   let categoryName = props.route.params.categoryName;
-  const [token, setToken] = useState('');
-  console.log('cat screen');
-  getData()
-    .then((token) => setToken(token))
-    .catch((error) => console.error(error));
-  let resData = useSelector((state) => state.taskReduce.CatTasks);
-  console.log(resData)
+  const token = props.route.params.token;
   const dispatch = useDispatch();
-  useEffect(() => {
-    dispatch(taskActions.fetchTasksByCat(token, categoryName));
-  }, [dispatch, token, categoryName]);
 
-  return (
-    <View style={{flex: 1}}>
-      <FlatList
-        keyExtractor={(item, index) => item.id.toString()}
-        data={resData}
-        renderItem={(itemData) => (
-          <CustomCard
-            taskData={itemData.item}
-            // key={taskData ? taskData.id : Math.floor(Math.random() * 101)}
-            navigation={props.navigation}
-            catScreen={'true'}
-            token={token}
-            cat={true}
-          />
-        )}
-      />
-      <View style={styles.screen}>
-        <TouchableOpacity
-          style={styles.circle}
-          onPress={() => props.navigation.navigate('Add Task', {taskData: {}})}>
-          <Image
-            source={require('/Users/ppatil/Desktop/TODOApp/assets/plus.png')}
-            style={styles.icon}
-          />
-        </TouchableOpacity>
+  useEffect(() => {
+    const unsubscribe = props.navigation.addListener('focus', () => {
+      dispatch(taskActions.fetchTasksByCat(token, categoryName));
+    });
+    return unsubscribe;
+  }, [props.navigation, dispatch, categoryName, token]);
+  let resData = useSelector((state) => state.taskReduce.CatTasks);
+  if (!resData.length) {
+    return (
+      <View>
+        <ImageBackground
+          style={{width: '100%', height: '100%'}}
+          source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/image.png')}
+        />
+        <View style={styles.screen}>
+          <TouchableOpacity
+            style={styles.circle}
+            onPress={() =>
+              props.navigation.navigate('Add Task', {
+                taskData: {},
+                token: token,
+              })
+            }>
+            <Image
+              source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/plus.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
       </View>
-    </View>
-  );
+    );
+  } else {
+    return (
+      <View style={{flex: 1}}>
+        <FlatList
+          keyExtractor={(item, index) => item + index}
+          data={resData}
+          renderItem={(itemData) => (
+            <CustomCard
+              taskData={itemData.item}
+              navigation={props.navigation}
+              catScreen={'true'}
+              token={token}
+            />
+          )}
+        />
+        <View style={styles.screen}>
+          <TouchableOpacity
+            style={styles.circle}
+            onPress={() =>
+              props.navigation.navigate('Add Task', {
+                taskData: {},
+                token: token,
+              })
+            }>
+            <Image
+              source={require('/Users/ppatil/Desktop/TODOApp/assets/Images/plus.png')}
+              style={styles.icon}
+            />
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 };
 
 const styles = StyleSheet.create({

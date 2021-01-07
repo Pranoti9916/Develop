@@ -1,5 +1,3 @@
-import AsyncStorage from '@react-native-community/async-storage';
-
 export const DELETE_TASK = 'DELETE_TASK';
 export const CREATE_TASK = 'CREATE_TASK';
 export const UPDATE_TASK = 'UPDATE_TASK';
@@ -8,7 +6,6 @@ export const FETCH_CAT_TASK = 'FETCH_CAT_TASK';
 
 export const fetchTasks = (token) => {
   let taskData = [];
- // console.log('fetch token' + token);
   return async (dispatch) => {
     try {
       const response = await fetch('https://tudu-node.herokuapp.com/tasks', {
@@ -25,8 +22,7 @@ export const fetchTasks = (token) => {
     } catch (error) {
       console.log(error);
     }
-    console.log('fetch');
-    console.log(taskData);
+
     dispatch({type: FETCH_TASK, tasks: taskData});
   };
 };
@@ -52,9 +48,6 @@ export const fetchTasksByCat = (token, category) => {
     } catch (error) {
       console.log(error);
     }
-
-    console.log(' fetch CAT DATA');
-    console.log(taskData);
     dispatch({type: FETCH_CAT_TASK, tasks: taskData});
   };
 };
@@ -69,10 +62,9 @@ export const createTask = (task, category, timestamp, token) => {
         },
         body: JSON.stringify({
           category,
-          status:'Open',
+          status: 'Open',
           timestamp,
           title: task,
-
         }),
       });
       const responseData = await response.json();
@@ -84,12 +76,11 @@ export const createTask = (task, category, timestamp, token) => {
     } catch (error) {
       alert(error.message);
     }
-    console.log('create tassk');
     dispatch({
       type: CREATE_TASK,
       taskData: {
         category,
-        status:'Open',
+        status: 'Open',
         timestamp,
         title: task,
       },
@@ -127,11 +118,9 @@ export const updateTask = (
   category,
   status,
   taskId,
-  date,
-  time,
+  timestamp,
   token,
 ) => {
-  console.log(taskId + 'update');
   return async (dispatch) => {
     try {
       const response = await fetch(
@@ -143,13 +132,13 @@ export const updateTask = (
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
-            title,
             category,
             status,
+            timestamp,
+            title,
           }),
         },
       );
-      console.log(response);
       if (response.status == 201) {
         alert('Data updated successfully');
       } else {
@@ -158,14 +147,14 @@ export const updateTask = (
     } catch (error) {
       console.log(error);
     }
-    console.log('update task');
     dispatch({
       type: UPDATE_TASK,
       taskId: taskId,
       taskData: {
-        title,
         category,
         status,
+        timestamp,
+        title,
       },
     });
   };

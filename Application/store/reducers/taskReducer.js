@@ -9,8 +9,6 @@ import {
 const initialState = {
   availableTasks: [],
   CatTasks: [],
-  // HealthTasks: [],
-  // SocialTasks: [],
 };
 
 export default (state = initialState, action) => {
@@ -26,11 +24,9 @@ export default (state = initialState, action) => {
         CatTasks: action.tasks,
       };
     case CREATE_TASK:
-      // console.log(action.taskData);
       return {
         ...state,
         availableTasks: state.availableTasks.concat(action.taskData),
-        // userProducts: state.userProducts.concat(newProduct)
       };
     case UPDATE_TASK:
       const catIndex = state.CatTasks.findIndex(
@@ -47,7 +43,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         availableTasks: updatedAvailableTasks,
-        // userProducts: updatedUserProducts
+        CatTasks: updatedCatTasks,
       };
     case DELETE_TASK:
       return {
@@ -55,6 +51,7 @@ export default (state = initialState, action) => {
         availableTasks: state.availableTasks.filter(
           (task) => task.id !== action.taskId,
         ),
+        CatTasks: state.CatTasks.filter((task) => task.id !== action.taskId),
       };
   }
   return state;

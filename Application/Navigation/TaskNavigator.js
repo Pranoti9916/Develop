@@ -48,19 +48,11 @@ function MyTabs() {
       <Stack.Screen
         name="My Tasks"
         component={CategoryDetailScreen}
-        options={({navigation, route}) => ({
+        options={({route}) => ({
           title: Platform.OS === 'ios' ? '' : route.params.categoryName,
           headerBackTitle: route.params.categoryName,
           headerBackTitleStyle: styles.header,
           headerTitleStyle: styles.header,
-          // headerLeft: () => (
-          //   <HeaderBackButton
-          //     label={route.params.categoryName}
-          //     onPress={() => {
-          //       navigation.goBack('Home');
-          //     }}
-          //   />
-          // ),
         })}
       />
       <Stack.Screen
@@ -77,7 +69,7 @@ function MyTabs() {
   );
 }
 
-function Nav() {
+function Navigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator screenOptions={{headerShown: false}}>
@@ -108,10 +100,9 @@ const styles = StyleSheet.create({
   },
   header: {
     height: 22,
-    //width: 85,
     color: '#4A90E2',
     fontFamily: 'Microsoft Sans Serif',
     fontSize: 20,
   },
 });
-export default Nav;
+export default Navigator;
